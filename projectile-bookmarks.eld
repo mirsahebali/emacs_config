@@ -1,0 +1,1 @@
+("~/.config/emacs/" "~/org/" "~/learn/" "~/learn/design_patterns/" "~/learn/solid/" "~/learn/haskell/" "~/learn/go/")
