@@ -51,6 +51,7 @@
   - [[#model-line][Model Line]]
   - [[#diminish][Diminish]]
   - [[#zooming][Zooming]]
+  - [[#minimap][Minimap]]
 - [[#utils][Utils]]
   - [[#persp-mode][Persp Mode]]
   - [[#buffer-move][Buffer Move]]
@@ -173,9 +174,36 @@
 
             ;; Enable recursive minibuffers
             (setq enable-recursive-minibuffers t))
+(use-package evil-goggles
+  :ensure t
+  :config
+  (evil-goggles-mode)
 
+  ;; optionally use diff-mode's faces; as a result, deleted text
+  ;; will be highlighed with `diff-removed` face which is typically
+  ;; some red color (as defined by the color theme)
+  ;; other faces such as `diff-added` will be used for other actions
+  (evil-goggles-use-diff-faces))
 ;; Don't install anything. Defer execution of BODY
 ;;(elpaca nil (message "deferred"))
+(use-package evil-embrace
+:init
+(evil-embrace-enable-evil-surround-integration)
+:config
+(evil-embrace-enable-evil-surround-integration)
+)
+(use-package evil-snipe
+:after evil
+:config
+(evil-snipe-mode +1)
+(evil-snipe-override-mode +1))
+(use-package evil-lion
+  :ensure t
+  :config
+  (evil-lion-mode))
+(use-package evil-easymotion
+:config
+(evilem-default-keybindings "SPC"))
 
 #+END_SRC
 
@@ -336,12 +364,14 @@
 * Load Important Util Packages
 ** Undo Tree
 #+begin_src emacs-lisp
+
 (use-package undo-fu
   :config
   (global-unset-key (kbd "C-z"))
   (global-set-key (kbd "C-z")   'undo-fu-only-undo)
   (global-set-key (kbd "C-S-z") 'undo-fu-only-redo))
 (use-package undo-fu-session)
+(use-package vundo)
 #+end_src
 
 ** Auto Brackets Pair 
@@ -552,29 +582,36 @@ Display the actual color as a background for any hex color value (ex. #ffffff). 
 #+end_src
 ** Company
    #+BEGIN_SRC emacs-lisp
-      (use-package company
-        :defer 2
-        :diminish
-        :init
-        (setq company-backends `((:separate company-capf company-yasnippet)))
-        :config
-        (setq lsp-completion-provider :none)
-        :custom
-        (company-begin-commands '(self-insert-command))
-        (company-idle-delay .1)
-        (company-minimum-prefix-length 2)
-        (company-show-numbers t)
-        (company-tooltip-align-annotations 't)
-        (global-company-mode t))
+         (use-package company
+           :defer 2
+           :diminish
+           :init
+           (setq company-backends `((:separate company-capf company-yasnippet)))
+           :config
+           (setq lsp-completion-provider :none)
+           :custom
+           (company-begin-commands '(self-insert-command))
+           (company-idle-delay .1)
+           (company-minimum-prefix-length 2)
+           (company-show-numbers t)
+           (company-tooltip-align-annotations 't)
+           (global-company-mode t))
 
-      (use-package company-box
-        :after company
-        :diminish
-        :hook (company-mode . company-box-mode))
-      (use-package auto-complete
-      :config
-   (ac-config-default)
-      )
+         (use-package company-box
+           :after company
+           :diminish
+           :hook (company-mode . company-box-mode))
+         (use-package auto-complete
+         :config
+      (ac-config-default)
+         )
+      (use-package company-shell
+   :config
+   ;;for multiple backends
+   (add-to-list 'company-backends '(company-shell company-shell-env company-fish-shell))
+      ;; for single 
+      ;;(add-to-list 'company-backends '(company-shell company-shell-env company-fish-shell))
+   )
 
    #+END_SRC
 ** Polymode
@@ -602,6 +639,12 @@ Display the actual color as a background for any hex color value (ex. #ffffff). 
 :config
 (magit-mode)
 )
+(use-package git-gutter
+:config
+(git-gutter-mode)
+(global-git-gutter-mode)
+)
+(use-package git-gutter-fringe)
 #+end_src
 ** Basic Config
 #+begin_src emacs-lisp
@@ -1202,6 +1245,11 @@ Other buffer group by `centaur-tabs-get-group-name' with project name."
 (global-set-key (kbd "C--") 'text-scale-decrease)
 (global-set-key (kbd "<C-wheel-up>") 'text-scale-increase)
 (global-set-key (kbd "<C-wheel-down>") 'text-scale-decrease)
+#+end_src
+
+** Minimap
+#+begin_src emacs-lisp
+(use-package minimap)
 #+end_src
 * Utils
 ** Persp Mode

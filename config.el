@@ -103,9 +103,36 @@
 
             ;; Enable recursive minibuffers
             (setq enable-recursive-minibuffers t))
+(use-package evil-goggles
+  :ensure t
+  :config
+  (evil-goggles-mode)
 
+  ;; optionally use diff-mode's faces; as a result, deleted text
+  ;; will be highlighed with `diff-removed` face which is typically
+  ;; some red color (as defined by the color theme)
+  ;; other faces such as `diff-added` will be used for other actions
+  (evil-goggles-use-diff-faces))
 ;; Don't install anything. Defer execution of BODY
 ;;(elpaca nil (message "deferred"))
+(use-package evil-embrace
+:init
+(evil-embrace-enable-evil-surround-integration)
+:config
+(evil-embrace-enable-evil-surround-integration)
+)
+(use-package evil-snipe
+:after evil
+:config
+(evil-snipe-mode +1)
+(evil-snipe-override-mode +1))
+(use-package evil-lion
+  :ensure t
+  :config
+  (evil-lion-mode))
+(use-package evil-easymotion
+:config
+(evilem-default-keybindings "SPC"))
 
 (use-package general
   :config
@@ -256,6 +283,7 @@
   (global-set-key (kbd "C-z")   'undo-fu-only-undo)
   (global-set-key (kbd "C-S-z") 'undo-fu-only-redo))
 (use-package undo-fu-session)
+(use-package vundo)
 
 (electric-pair-mode)
 
@@ -381,28 +409,35 @@
   :after tree-sitter)
 
 (use-package company
-     :defer 2
-     :diminish
-     :init
-     (setq company-backends `((:separate company-capf company-yasnippet)))
-     :config
-     (setq lsp-completion-provider :none)
-     :custom
-     (company-begin-commands '(self-insert-command))
-     (company-idle-delay .1)
-     (company-minimum-prefix-length 2)
-     (company-show-numbers t)
-     (company-tooltip-align-annotations 't)
-     (global-company-mode t))
+        :defer 2
+        :diminish
+        :init
+        (setq company-backends `((:separate company-capf company-yasnippet)))
+        :config
+        (setq lsp-completion-provider :none)
+        :custom
+        (company-begin-commands '(self-insert-command))
+        (company-idle-delay .1)
+        (company-minimum-prefix-length 2)
+        (company-show-numbers t)
+        (company-tooltip-align-annotations 't)
+        (global-company-mode t))
 
-   (use-package company-box
-     :after company
-     :diminish
-     :hook (company-mode . company-box-mode))
-   (use-package auto-complete
-   :config
-(ac-config-default)
-   )
+      (use-package company-box
+        :after company
+        :diminish
+        :hook (company-mode . company-box-mode))
+      (use-package auto-complete
+      :config
+   (ac-config-default)
+      )
+   (use-package company-shell
+:config
+;;for multiple backends
+(add-to-list 'company-backends '(company-shell company-shell-env company-fish-shell))
+   ;; for single 
+   ;;(add-to-list 'company-backends '(company-shell company-shell-env company-fish-shell))
+)
 
 (use-package polymode
 :ensure t)
@@ -422,6 +457,12 @@
 :config
 (magit-mode)
 )
+(use-package git-gutter
+:config
+(git-gutter-mode)
+(global-git-gutter-mode)
+)
+(use-package git-gutter-fringe)
 
 (use-package lsp-mode :hook ((lsp-mode . lsp-enable-which-key-integration)))
 (use-package lsp-ui)
@@ -965,6 +1006,8 @@ Other buffer group by `centaur-tabs-get-group-name' with project name."
 (global-set-key (kbd "C--") 'text-scale-decrease)
 (global-set-key (kbd "<C-wheel-up>") 'text-scale-increase)
 (global-set-key (kbd "<C-wheel-down>") 'text-scale-decrease)
+
+(use-package minimap)
 
 (use-package perspective
   :bind
