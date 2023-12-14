@@ -5,3 +5,5 @@ auto-save-list
 elpaca
 elpa
 .cache
+.dap-breakpoints
+.lsp-session-v1
