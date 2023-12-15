@@ -2,7 +2,7 @@
 #+AUTHOR: Mir Saheb Ali
 #+STARTUP: showeverything
 #+OPTIONS: toc:4
-
+ 
 * Table of contents :toc:
 - [[#load-elpac][Load Elpac]]
 - [[#load-evil-mode][Load Evil Mode]]
@@ -210,85 +210,86 @@
 * General Keybindings
 #+BEGIN_SRC emacs-lisp
 
-(use-package general
-  :config
-  (general-evil-setup)
+    (use-package general
+        :config
+        (general-evil-setup)
 
   ;; set up 'SPC' as the global leader key
-  (general-create-definer saheb/leader-keys
-    :states '(normal insert visual emacs)
-    :keymaps 'override
-    :prefix "SPC" ;; set leader
-    :global-prefix "M-SPC") ;; access leader in insert mode
+    (general-create-definer saheb/leader-keys
+        :states '(normal insert visual emacs)
+        :keymaps 'override
+        :prefix "SPC" ;; set leader
+        :global-prefix "M-SPC") ;; access leader in insert mode
 
-  (saheb/leader-keys
-    "." '(find-file :wk "Find file")
-    "s c" '((lambda () (interactive) (find-file "~/.config/emacs/config.org")) :wk "Edit emacs config")
-    "f s" '(save-buffer :wk "File Save")
-    "f m" '(treemacs :wk "File Tree")
-    )
+    (saheb/leader-keys
+        "." '(find-file :wk "Find file")
+        "s c" '((lambda () (interactive) (find-file "~/.config/emacs/config.org")) :wk "Edit emacs config")
+        "f s" '(save-buffer :wk "File Save")
+        "f m" '(treemacs :wk "File Tree"))
 
-  (saheb/leader-keys
-    "b" '(:ignore t :wk "buffer")
-    "b b" '(switch-to-buffer :wk "Switch buffer")
-    "b i" '(ibuffer :wk "Ibuffer")
-    "b d" '(kill-this-buffer :wk "Kill this buffer")
-    "b n" '(next-buffer :wk "Next buffer")
-    "b p" '(previous-buffer :wk "Previous buffer")
-    "b r" '(revert-buffer :wk "Reload buffer"))
+    (saheb/leader-keys
+        "b" '(:ignore t :wk "buffer")
+        "b b" '(switch-to-buffer :wk "Switch buffer")
+        "b i" '(ibuffer :wk "Ibuffer")
+        "b d" '(kill-this-buffer :wk "Kill this buffer")
+        "b n" '(next-buffer :wk "Next buffer")
+        "b p" '(previous-buffer :wk "Previous buffer")
+        "b r" '(revert-buffer :wk "Reload buffer"))
 
-  (saheb/leader-keys
-    "e" '(:ignore t :wk "Evaluate")    
-    "e b" '(eval-buffer :wk "Evaluate elisp in buffer")
-    "e d" '(eval-defun :wk "Evaluate defun containing or after point")
-    "e e" '(eval-expression :wk "Evaluate and elisp expression")
-    "e l" '(eval-last-sexp :wk "Evaluate elisp expression before point")
-    "e r" '(eval-region :wk "Evaluate elisp in region")) 
+    (saheb/leader-keys
+        "e" '(:ignore t :wk "Evaluate")    
+        "e b" '(eval-buffer :wk "Evaluate elisp in buffer")
+        "e d" '(eval-defun :wk "Evaluate defun containing or after point")
+        "e e" '(eval-expression :wk "Evaluate and elisp expression")
+        "e l" '(eval-last-sexp :wk "Evaluate elisp expression before point")
+        "e r" '(eval-region :wk "Evaluate elisp in region")) 
 
-   (saheb/leader-keys
-    "h" '(:ignore t :wk "Help/Errors")
-    "h f" '(describe-function :wk "Describe function")
-    "h v" '(describe-variable :wk "Describe variable")
-    "h e" '(flycheck-list-errors :wk  "List errors in buffer")
-    ;;"h r r" '((lambda () (interactive) (load-file "~/.config/emacs/init.el")) :wk "Reload emacs config"))
-    "h r r" '(reload-init-file :wk "Reload emacs config"))
+    (saheb/leader-keys
+        "h" '(:ignore t :wk "Help/Errors")
+        "h f" '(describe-function :wk "Describe function")
+        "h v" '(describe-variable :wk "Describe variable")
+        "h e" '(flycheck-list-errors :wk  "List errors in buffer")
+        ;;"h r r" '((lambda () (interactive) (load-file "~/.config/emacs/init.el")) :wk "Reload emacs config"))
+        "h r r" '(reload-init-file :wk "Reload emacs config"))
 
-   (saheb/leader-keys
-    "t" '(:ignore t :wk "Toggle")
-    "t l" '(display-line-numbers-mode :wk "Toggle line numbers")
-    "t t" '(visual-line-mode :wk "Toggle truncated lines"))
-  (saheb/leader-keys
-    "m b" '(:ignore t :wk "Tables")
-    "m b -" '(org-table-insert-hline :wk "Insert hline in table"))
+    (saheb/leader-keys
+        "t" '(:ignore t :wk "Toggle")
+        "t l" '(display-line-numbers-mode :wk "Toggle line numbers")
+        "t t" '(visual-line-mode :wk "Toggle truncated lines"))
+    (saheb/leader-keys
+        "m b" '(:ignore t :wk "Tables")
+        "m b -" '(org-table-insert-hline :wk "Insert hline in table"))
 
-  (saheb/leader-keys
-    "m d" '(:ignore t :wk "Date/deadline")
-    "m d t" '(org-time-stamp :wk "Org time stamp"))
+    (saheb/leader-keys
+        "m d" '(:ignore t :wk "Date/deadline")
+        "m d t" '(org-time-stamp :wk "Org time stamp"))
 
-  (saheb/leader-keys
-    "p" '(projectile-command-map :wk "Projectile"))
+    (saheb/leader-keys
+        "p" '(projectile-command-map :wk "Projectile"))
+    (saheb/leader-keys
+        "p a" '(projectile-add-known-project :wk "Add project directory"))
 
-(saheb/leader-keys
-    "q" '(kill-buffer-and-window :wk "Kill buffer and window"))
+    (saheb/leader-keys
+        "q" '(kill-buffer-and-window :wk "Kill buffer and window"))
 
-  (saheb/leader-keys
-    "w" '(:ignore t :wk "Windows")
-    ;; Window splits
-    "w c" '(evil-window-delete :wk "Close window")
-    "w n" '(evil-window-new :wk "New window")
-    "w s" '(evil-window-split :wk "Horizontal split window")
-    "w v" '(evil-window-vsplit :wk "Vertical split window")
-    ;; Window motions
-    "w h" '(evil-window-left :wk "Window left")
-    "w j" '(evil-window-down :wk "Window down")
-    "w k" '(evil-window-up :wk "Window up")
-    "w l" '(evil-window-right :wk "Window right")
-    "w w" '(evil-window-next :wk "Goto next window")
-    ;; Move Windows
-    "w H" '(buf-move-left :wk "Buffer move left")
-    "w J" '(buf-move-down :wk "Buffer move down")
-    "w K" '(buf-move-up :wk "Buffer move up")
-    "w L" '(buf-move-right :wk "Buffer move right"))
+    (saheb/leader-keys
+        "w" '(:ignore t :wk "Windows")
+        ;; Window splits
+        "w c" '(evil-window-delete :wk "Close window")
+        "w n" '(evil-window-new :wk "New window")
+        "w s" '(evil-window-split :wk "Horizontal split window")
+        "w v" '(evil-window-vsplit :wk "Vertical split window")
+        ;; Window motions
+        "w h" '(evil-window-left :wk "Window left")
+        "w j" '(evil-window-down :wk "Window down")
+        "w k" '(evil-window-up :wk "Window up")
+        "w l" '(evil-window-right :wk "Window right")
+        "w w" '(evil-window-next :wk "Goto next window")
+        ;; Move Windows
+        "w H" '(buf-move-left :wk "Buffer move left")
+        "w J" '(buf-move-down :wk "Buffer move down")
+        "w K" '(buf-move-up :wk "Buffer move up")
+        "w L" '(buf-move-right :wk "Buffer move right"))
 #+end_src
 ** ORG mode Keymaps
 #+begin_src emacs-lisp
@@ -309,8 +310,16 @@
         ">" 'evil-org->
         "<" 'evil-org-<)
 
-#+end_src
+(general-define-key 
+       :states '(normal insert)
+       :keymaps 'org-mode-map
+            "C-S-j" 'org-shiftdown
+            "C-S-k" 'org-shiftup
+            "C-S-l" 'org-shiftright
+            "C-S-h" 'org-shiftleft
+)
 
+#+end_src
 
 ** OTHER Keymaps
 #+begin_src emacs-lisp
