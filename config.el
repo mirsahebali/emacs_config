@@ -272,8 +272,8 @@
 ;; Better 'Buffer' navigation
     (general-define-key
         :states '(normal visual emacs)
-            "M-i" 'next-buffer
-            "M-u" 'previous-buffer)
+            "M-i" 'centaur-tabs-forward
+            "M-u" 'centaur-tabs-backward)
     (general-define-key
         :states '(normal visual emacs)
             "C-h" '(evil-window-left :wk "Window left")
@@ -298,15 +298,15 @@
 (electric-pair-mode)
 
 (set-face-attribute 'default nil
-  :font "JetBrains Mono Nerd Font"
+  :font "JetBrainsMono Nerd Font"
   :height 110
   :weight 'medium)
 (set-face-attribute 'variable-pitch nil
-  :font "JetBrains Mono Nerd Font"
+  :font "JetBrainsMono Nerd Font"
   :height 120
   :weight 'medium)
 (set-face-attribute 'fixed-pitch nil
-  :font "JetBrains Mono Nerd Font"
+  :font "JetBrainsMono Nerd Font"
   :height 110
   :weight 'medium)
 ;; Makes commented text and keywords italics.
@@ -320,7 +320,7 @@
 ;; This sets the default font on all graphical frames created after restarting Emacs.
 ;; Does the same thing as 'set-face-attribute default' above, but emacsclient fonts
 ;; are not right unless I also add this method of setting the default font.
-(add-to-list 'default-frame-alist '(font . "JetBrains Mono Nerd Font-12"))
+(add-to-list 'default-frame-alist '(font . "JetBrainsMono Nerd Font-12"))
 
 ;; Uncomment the following line if line spacing needs adjusting.
 (setq-default line-spacing 0.12)
@@ -837,12 +837,12 @@ general
   :init
   (setq centaur-tabs-enable-key-bindings t)
   :config
-  (setq centaur-tabs-style "bar"
+  (setq centaur-tabs-style "box"
         centaur-tabs-height 32
         centaur-tabs-set-icons t
         centaur-tabs-show-new-tab-button t
         centaur-tabs-set-modified-marker t
-        centaur-tabs-show-navigation-buttons t
+        centaur-tabs-cycle-scope 'tabs
         centaur-tabs-set-bar 'under
         centaur-tabs-show-count nil
         ;; centaur-tabs-label-fixed-length 15
@@ -850,66 +850,20 @@ general
         ;; centaur-tabs-plain-icons t
         x-underline-at-descent-line t
         centaur-tabs-left-edge-margin nil)
-  (centaur-tabs-change-fonts (face-attribute 'default :font) 110)
+  (centaur-tabs-change-fonts "JetBrainsMono Nerd Font" 110)
   (centaur-tabs-headline-match)
   ;; (centaur-tabs-enable-buffer-alphabetical-reordering)
   ;; (setq centaur-tabs-adjust-buffer-order t)
   (centaur-tabs-mode t)
+    (centaur-tabs-group-by-projectile-project)
   (setq uniquify-separator "/")
   (setq uniquify-buffer-name-style 'forward)
-  (defun centaur-tabs-buffer-groups ()
-    "`centaur-tabs-buffer-groups' control buffers' group rules.
-
-Group centaur-tabs with mode if buffer is derived from `eshell-mode' `emacs-lisp-mode' `dired-mode' `org-mode' `magit-mode'.
-All buffer name start with * will group to \"Emacs\".
-Other buffer group by `centaur-tabs-get-group-name' with project name."
-    (list
-     (cond
-      ;; ((not (eq (file-remote-p (buffer-file-name)) nil))
-      ;; "Remote")
-      ((or (string-equal "*" (substring (buffer-name) 0 1))
-           (memq major-mode '(magit-process-mode
-                              magit-status-mode
-                              magit-diff-mode
-                              magit-log-mode
-                              magit-file-mode
-                              magit-blob-mode
-                              magit-blame-mode
-                              )))
-       "Emacs")
-      ((derived-mode-p 'prog-mode)
-       "Editing")
-      ((derived-mode-p 'dired-mode)
-       "Dired")
-      ((memq major-mode '(helpful-mode
-                          help-mode))
-       "Help")
-      ((memq major-mode '(org-mode
-                          org-agenda-clockreport-mode
-                          org-src-mode
-                          org-agenda-mode
-                          org-beamer-mode
-                          org-indent-mode
-                          org-bullets-mode
-                          org-cdlatex-mode
-                          org-agenda-log-mode
-                          diary-mode))
-       "OrgMode")
-      (t
-       (centaur-tabs-get-group-name (current-buffer))))))
-  :hook
+ :hook
   (dashboard-mode . centaur-tabs-local-mode)
   (term-mode . centaur-tabs-local-mode)
   (calendar-mode . centaur-tabs-local-mode)
   (org-agenda-mode . centaur-tabs-local-mode)
-  :bind
-  ("C-<prior>" . centaur-tabs-backward)
-  ("C-<next>" . centaur-tabs-forward)
-  ("C-S-<prior>" . centaur-tabs-move-current-tab-to-left)
-  ("C-S-<next>" . centaur-tabs-move-current-tab-to-right)
-  (:map evil-normal-state-map
-        ("g t" . centaur-tabs-forward)
-        ("g T" . centaur-tabs-backward)))
+  )
 
 (use-package catppuccin-theme
         :init
