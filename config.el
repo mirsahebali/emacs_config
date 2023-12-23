@@ -147,9 +147,7 @@
 
   (saheb/leader-keys
       "." '(find-file :wk "Find file")
-      "s c" '((lambda () (interactive) (find-file "~/.config/emacs/config.org")) :wk "Edit emacs config")
-      "f s" '(save-buffer :wk "File Save")
-      "f m" '(treemacs :wk "File Tree"))
+      "s c" '((lambda () (interactive) (find-file "~/.config/emacs/config.org")) :wk "Edit emacs config"))
 
   (saheb/leader-keys
       "b" '(:ignore t :wk "buffer")
@@ -237,8 +235,23 @@
             "C-S-j" 'org-shiftdown
             "C-S-k" 'org-shiftup
             "C-S-l" 'org-shiftright
-            "C-S-h" 'org-shiftleft
-)
+            "C-S-h" 'org-shiftleft)
+
+(saheb/leader-keys
+        "f" '(:ignore t :wk "File")
+        "f s" '(save-buffer :wk "File Save")
+        "f m" '(treemacs :wk "File Tree")
+        "f c" '(treemacs-create-file :wk "Create File")
+        "f d" '(treemacs-create-dir :wk "Create Directory")
+        "f r" '(rename-file :wk "Rename File")
+        "f k d" '(delete-directory :wk "Delete Directory") 
+        "f k f" '(delete-file :wk "Delete File"))
+
+(saheb/leader-keys
+        "l" '(:ignore t :wk "LSP")
+        "l r" '(lsp-rename :wk "Rename")
+        "l a" '(lsp-execute-code-action :wk "Code action")
+        "l f" '(lsp-format-buffer :wk "Code action"))
 
 ;; 'g-keys'
     (general-create-definer saheb/g-keys
@@ -474,7 +487,14 @@
 )
 (use-package git-gutter-fringe)
 
-(use-package lsp-mode :hook ((lsp-mode . lsp-enable-which-key-integration)))
+(use-package lsp-mode 
+:hook
+ ((lsp-mode . lsp-enable-which-key-integration))
+:config
+(setq gc-cons-threshold 100000000)
+(setq read-process-output-max (* 1024 1024)) ;; 1mb
+
+)
 (use-package lsp-ui)
 (use-package dap-mode :after lsp-mode :config (dap-auto-configure-mode))
 (use-package lsp-treemacs)
@@ -500,31 +520,21 @@
                                 ("irw" . "io.ReadWriter"))))
 )
 
-(use-package haskell-mode
-            :config
+(use-package lsp-haskell
+        :config
+            (add-hook 'haskell-mode-hook 'turn-on-haskell-doc-mode)
+            (add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)
+            (add-to-list 'completion-ignored-extensions ".hi")
+            (add-hook 'haskell-mode-hook #'lsp)
+             (add-hook 'haskell-literate-mode-hook #'lsp)
+            (add-hook 'lsp-after-initialize-hook
+            '(lambda ()
+                (lsp--set-configuration
+                '(:haskell (:plugin (:tactics (:config (:timeout_duration 5)))))
+                )))
+            (setq lsp-haskell-server-path "/home/mirsahebali/.ghcup/hls/2.4.0.0/bin/haskell-language-server-wrapper"))
 
-(add-hook 'haskell-mode-hook 'turn-on-haskell-doc-mode)
-
-;; hslint on the command line only likes this indentation mode;
-;; alternatives commented out below.
-(add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)
-;;(add-hook 'haskell-mode-hook 'turn-on-haskell-indent)
-;;(add-hook 'haskell-mode-hook 'turn-on-haskell-simple-indent)
-
-;; Ignore compiled Haskell files in filename completions
-(add-to-list 'completion-ignored-extensions ".hi")
-
-(add-hook 'haskell-mode-hook #'lsp)
-(add-hook 'haskell-literate-mode-hook #'lsp)
-(add-hook 'lsp-after-initialize-hook
-          '(lambda ()
-             (lsp--set-configuration
-              '(:haskell (:plugin (:tactics (:config (:timeout_duration 5)))))
-              )))
-(setq lsp-haskell-server-path "/home/mirsahebali/.ghcup/hls/2.4.0.0/bin/haskell-language-server-wrapper")
-)
-
-(use-package lsp-haskell)
+(use-package haskell-mode)
 
 (use-package lua-mode)
 
@@ -601,6 +611,11 @@
 
 (add-hook 'c-mode-hook 'lsp)
 (add-hook 'c++-mode-hook 'lsp)
+(defun lsp-c-save-hooks ()
+    (add-hook 'before-save-hook #'lsp-format-buffer t t))
+
+(add-hook 'c++-mode-hook #'lsp-c-save-hooks)
+(add-hook 'c-mode-hook #'lsp-c-save-hooks)
 
 (use-package yasnippet
 :config 
@@ -1064,3 +1079,5 @@ one, an error is signaled."
 
 (use-package transient
 :ensure t)
+
+(use-package org-pomodoro)
