@@ -252,6 +252,10 @@
         "l r" '(lsp-rename :wk "Rename")
         "l a" '(lsp-execute-code-action :wk "Code action")
         "l f" '(lsp-format-buffer :wk "Code action"))
+;; 'LSP' keymaps
+    (general-define-key
+        :states '(normal visual)
+        "K" 'lsp-ui-doc-glance)
 
 ;; 'g-keys'
     (general-create-definer saheb/g-keys
@@ -272,10 +276,6 @@
 	(general-key-dispatch 'self-insert-command 
 	:timeout 0.25
 	"k" 'evil-normal-state))
-;; 'LSP' keymaps
-    (general-define-key
-        :states '(normal visual)
-        "K" 'lsp-ui-doc-glance)
 ;; 'ORG' keymaps to move between headings
     (general-define-key
         :states '(normal visual)
@@ -298,7 +298,8 @@
         :states '(normal visual emacs)
             "M-j" '(evil-collection-unimpaired-move-text-down :wk "Move Text Down")
             "M-k" '(evil-collection-unimpaired-move-text-up :wk "Move Text Up"))
-)
+(general-translate-key nil '(normal visual emacs)
+  "ESC" "C-g"))
 
 (use-package undo-fu
   :config
@@ -351,7 +352,7 @@
 (use-package org-roam
   :ensure t
   :custom
-  (org-roam-directory (file-truename "/path/to/org-files/"))
+  (org-roam-directory (file-truename "~/org"))
   :bind (("C-c n l" . org-roam-buffer-toggle)
          ("C-c n f" . org-roam-node-find)
          ("C-c n g" . org-roam-graph)

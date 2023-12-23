@@ -1,1 +1,1 @@
-("~/.config/emacs/" "~/dots/" "~/learn/" "~/learn/dsa/")
+("~/dots/" "~/learn/" "~/.config/emacs/" "~/org/" "~/learn/dsa/" "~/fun/emacs/")

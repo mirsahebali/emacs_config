@@ -342,6 +342,10 @@
         "l r" '(lsp-rename :wk "Rename")
         "l a" '(lsp-execute-code-action :wk "Code action")
         "l f" '(lsp-format-buffer :wk "Code action"))
+;; 'LSP' keymaps
+    (general-define-key
+        :states '(normal visual)
+        "K" 'lsp-ui-doc-glance)
 
 #+end_src
 
@@ -366,10 +370,6 @@
 	(general-key-dispatch 'self-insert-command 
 	:timeout 0.25
 	"k" 'evil-normal-state))
-;; 'LSP' keymaps
-    (general-define-key
-        :states '(normal visual)
-        "K" 'lsp-ui-doc-glance)
 ;; 'ORG' keymaps to move between headings
     (general-define-key
         :states '(normal visual)
@@ -392,7 +392,8 @@
         :states '(normal visual emacs)
             "M-j" '(evil-collection-unimpaired-move-text-down :wk "Move Text Down")
             "M-k" '(evil-collection-unimpaired-move-text-up :wk "Move Text Up"))
-)
+(general-translate-key nil '(normal visual emacs)
+  "ESC" "C-g"))
 #+END_SRC
 * Load Important Util Packages
 ** Undo Tree
@@ -477,7 +478,7 @@
 (use-package org-roam
   :ensure t
   :custom
-  (org-roam-directory (file-truename "/path/to/org-files/"))
+  (org-roam-directory (file-truename "~/org"))
   :bind (("C-c n l" . org-roam-buffer-toggle)
          ("C-c n f" . org-roam-node-find)
          ("C-c n g" . org-roam-graph)
@@ -491,7 +492,7 @@
   (org-roam-db-autosync-mode)
   ;; If using org-roam-protocol
   (require 'org-roam-protocol))
-#+end_src
+  #+end_src
 ** ORG-SQL
 #+begin_src emacs-lisp
 (use-package org-sql
@@ -499,6 +500,7 @@
   :config
   ;; add config options here...
   )
+
 #+end_src
 ** Few Keybindings
 #+begin_src emacs-lisp
